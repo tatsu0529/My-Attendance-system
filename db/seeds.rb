@@ -16,9 +16,6 @@ User.create!(name: "管理者",
                password_confirmation: password)
 end
 
-
-puts "Users Created"
-
 admin_user = User.first
 guest_user = User.find(2)
 
@@ -28,5 +25,3 @@ guest_user = User.find(2)
   admin_user.tasks.create!(name: task_name, description: description)
   guest_user.tasks.create!(name: task_name, description: description)
 end
-
-puts "Tasks Created"

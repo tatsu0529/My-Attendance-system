@@ -17,7 +17,7 @@
         </tr>
         <tr>
           <th class="active col-md-2"><%= "詳細" %></th>
-          <td><%= @task.description %></td>
+          <td><%= text_url_to_link(simple_format(@task.description)).html_safe %></td>
         </tr>
         <tr>
           <th class="active col-md-2"><%= "作成日" %></th>
