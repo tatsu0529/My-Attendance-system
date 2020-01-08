@@ -1,11 +1,17 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:show, :edit, :update]
+  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy]
+  before_action :correct_user, only: [:edit, :update]
+  before_action :admin_user, only: [:index, :destroy]
   
   def show
-    @user = User.find(params[:id])
   end
 
   def new
+    if logged_in? && !current_user.admin?
+      flash[:info] = 'すでにログインしています。'
+      redirect_to current_user
+    end
     @user = User.new
   end
   
@@ -14,11 +20,9 @@ class UsersController < ApplicationController
   end
   
   def edit
-    @user = User.find(params[:id])
   end
   
   def update
-      @user = User.find(params[:id])
     if @user.update(user_params)
       flash[:success] = "ユーザー情報を更新しました。"
       redirect_to @user
@@ -38,18 +42,20 @@ class UsersController < ApplicationController
     end
   end
   
+  def destroy
+    @user.destroy
+    flash[:success] = "#{@user.name}のデータを削除しました。"
+    redirect_to @user
+  end
+  
   private
   
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
     
-    def logged_in_user
-  unless logged_in?
-    flash[:danger] = "ログインしてください。"
-    redirect_to login_url
-  end
-end
-    
+    def set_user
+      @user = User.find(params[:id])
+    end
     
 end
